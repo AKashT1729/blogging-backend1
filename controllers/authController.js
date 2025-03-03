@@ -10,11 +10,18 @@ const loginAdmin = async (req, res) => {
   const user = await User.findOne({ username })
   
   if (user && (await user.matchPassword(password)) && user.isAdmin) {
+    const token = generateToken(user._id)
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+    })
     res.json({
       _id: user._id,
       username: user.username,
       isAdmin: user.isAdmin,
-      token: generateToken(user._id)
+      token
     })
   } else {
     res.status(401)

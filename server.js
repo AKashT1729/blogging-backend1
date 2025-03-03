@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
+const cookieParser = require('cookie-parser')
 const connectDB = require('./cofig/db')
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware')
 
@@ -16,14 +17,12 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json())
 app.use(morgan('dev'))
+app.use(cookieParser())
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/api/posts', require('./routes/postRoutes'))
 app.use('/api/comments', require('./routes/commentRoutes'))
-
-
-
 
 // Add after routes
 app.use(notFound)
