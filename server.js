@@ -3,7 +3,8 @@ const dotenv = require('dotenv')
 const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
-const connectDB = require('./config/db')
+const connectDB = require('./cofig/db')
+const { notFound, errorHandler } = require('./middlewares/errorMiddleware')
 
 dotenv.config()
 connectDB()
@@ -21,8 +22,12 @@ app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/api/posts', require('./routes/postRoutes'))
 app.use('/api/comments', require('./routes/commentRoutes'))
 
-// Error handling
-app.use(require('./middlewares/errorMiddleware'))
+
+
+
+// Add after routes
+app.use(notFound)
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => 
